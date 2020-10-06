@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const expressHbs = require('express-handlebars');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -9,8 +10,17 @@ const shopRoutes = require('./routes/shop');
 
 const app = express();
 
-app.set('view engine', 'pug');
-app.set('views', 'views');
+app.engine(
+  'hbs',
+  expressHbs({
+    layoutsDir: 'views/layouts',
+    defaultLayout: 'main-layout',
+    extname: 'hbs', // can be omitted if I write defaultLayout with extension or if the main-layout extention is *.handlebars.
+  })
+);
+app.set('view engine', 'hbs');
+// app.set('view engine', 'pug');
+app.set('views', 'views'); // by default views look in views folder
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '/public')));
